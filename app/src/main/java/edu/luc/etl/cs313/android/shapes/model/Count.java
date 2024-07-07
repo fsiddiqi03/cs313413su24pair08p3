@@ -16,18 +16,22 @@ public class Count implements Visitor<Integer> {
     }
 
     @Override
-    public Integer onCircle(final Circle c) {
-        return -1;
+    public Integer onCircle(final Circle c) { // Basic shapes, return 1
+        return 1;
     }
 
     @Override
-    public Integer onGroup(final Group g) {
-        return -1;
+    public Integer onGroup(final Group g) { // Group is a list of shapes
+        int count = 0;
+        for (Shape shape : g.getShapes()){ // loop through the list of shapes and add 1 to count
+            count += shape.accept(this);
+        }
+        return count;
     }
 
     @Override
-    public Integer onRectangle(final Rectangle q) {
-        return -1;
+    public Integer onRectangle(final Rectangle q) { // Basic shapes, return 1
+        return 1;
     }
 
     @Override
