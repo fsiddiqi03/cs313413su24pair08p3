@@ -15,6 +15,7 @@ public class Point extends Location {
         assert y >= 0;
     }
 
+    @Override
     public <Result> Result accept(final Visitor<Result> v) {
         return v.onLocation(this);
     }
