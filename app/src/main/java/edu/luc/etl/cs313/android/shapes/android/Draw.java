@@ -84,15 +84,15 @@ public class Draw implements Visitor<Void> {
     @Override
     public Void onPolygon(final Polygon s) {
 
-        final int size = p.getPoints().size();
+        final int size = s.getPoints().size();
         if (size < 2) return null;
 
         final float[] pts = new float[(size + 1) * 4];
         int index = 0;
 
         for (int i = 0; i < size; i++) {
-            Point start = p.getPoints().get(i);
-            Point end = p.getPoints().get((i + 1) % size);
+            Point start = s.getPoints().get(i);
+            Point end = s.getPoints().get((i + 1) % size);
             pts[index++] = start.getX();
             pts[index++] = start.getY();
             pts[index++] = end.getX();
