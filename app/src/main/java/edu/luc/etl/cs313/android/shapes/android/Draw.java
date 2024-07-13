@@ -20,7 +20,6 @@ public class Draw implements Visitor<Void> {
     public Draw(final Canvas canvas, final Paint paint) {
         this.canvas = canvas; // FIXME
         this.paint = paint; // FIXME
-        paint.setStyle(Style.STROKE);
     }
 
     @Override
@@ -31,10 +30,14 @@ public class Draw implements Visitor<Void> {
 
     @Override
     public Void onStrokeColor(final StrokeColor c) {
-        int color = c.getColor();
-        paint.setColor(color);
+
+        int oldColor = paint.getColor();
+        Style oldStyle = paint.getStyle();
+        paint.setColor(c.getColor());
+        paint.setStyle(Style.FILL_AND_STROKE);  // Ensure the style is set as expected
         c.getShape().accept(this);
-        paint.setColor(color);
+        paint.setColor(oldColor);
+        paint.setStyle(oldStyle);
         return null;
 
     }
@@ -42,10 +45,10 @@ public class Draw implements Visitor<Void> {
     @Override
     public Void onFill(final Fill f) {
 
-        final Style original = paint.getStyle();
+        Style oldStyle = paint.getStyle();
         paint.setStyle(Style.FILL);
         f.getShape().accept(this);
-        paint.setStyle(original);
+        paint.setStyle(oldStyle);
         return null;
 
     }
@@ -62,10 +65,9 @@ public class Draw implements Visitor<Void> {
     @Override
     public Void onLocation(final Location l) {
 
-        canvas.save();
         canvas.translate(l.getX(), l.getY());
         l.getShape().accept(this);
-        canvas.restore();
+        canvas.translate(-l.getX(), -l.getY());
         return null;
 
     }
