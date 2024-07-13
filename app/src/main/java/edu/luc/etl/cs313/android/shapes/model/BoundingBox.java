@@ -28,7 +28,11 @@ public class BoundingBox implements Visitor<Location> {
 
     @Override
     public Location onLocation(final Location l) {
-        return null;
+        Location innerLocation = l.getShape().accept(this);
+        int newX = l.getX() + innerLocation.getX();
+        int newY = l.getY() + innerLocation.getY();
+        return new Location(newX, newY, innerLocation.getShape());
+
     }
 
     @Override
@@ -50,6 +54,21 @@ public class BoundingBox implements Visitor<Location> {
 
     @Override
     public Location onPolygon(final Polygon s) {
-        return null;
+        // Set min and Max Variables
+        int minX = Integer.MAX_VALUE;
+        int maxX = Integer.MIN_VALUE;
+        int minY = Integer.MAX_VALUE;
+        int maxY = Integer.MIN_VALUE;
+
+        for (final Point p : s.getPoints()) { // loop through points to find the min and max points
+            int x = p.getX();
+            int y = p.getY();
+            minX = Math.min(minX, x);
+            maxX = Math.max(maxX, x);
+            minY = Math.min(minY, y);
+            maxY = Math.max(maxY, y);
+
+        }
+        return new Location(minX, minY, new Rectangle(maxX - minX, maxY - minY));
     }
 }
